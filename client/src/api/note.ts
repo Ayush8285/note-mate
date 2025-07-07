@@ -1,6 +1,6 @@
 import axios from "axios";
-
-const NOTE_API = "http://localhost:5000/api/notes";
+const BASE_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";
+const NOTE_API = `${BASE_URL}/api/notes`;
 
 const getAuthHeader = () => {
   const token = localStorage.getItem("token") || sessionStorage.getItem("token");

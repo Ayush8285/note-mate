@@ -1,6 +1,7 @@
 import axios from "axios";
 
-const USER_API = "http://localhost:5000/api/user";
+const BASE_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";
+const USER_API = `${BASE_URL}/api/user`;
 
 const getAuthHeader = () => {
   const token = localStorage.getItem("token") || sessionStorage.getItem("token");
