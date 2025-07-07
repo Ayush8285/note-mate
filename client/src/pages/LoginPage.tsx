@@ -2,7 +2,12 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import { motion, AnimatePresence } from "framer-motion";
-import { sendLoginOtp, verifyOtp, resendOtp, googleAuthLogin  } from "../api/auth";
+import {
+  sendLoginOtp,
+  verifyOtp,
+  resendOtp,
+  googleAuthLogin,
+} from "../api/auth";
 import { Eye, EyeOff } from "lucide-react";
 import "react-toastify/dist/ReactToastify.css";
 import { useGoogleLogin } from "@react-oauth/google";
@@ -123,23 +128,25 @@ const LoginPage: React.FC = () => {
   const googleLogin = useGoogleLogin({
     onSuccess: async (tokenResponse) => {
       try {
-        const res = await googleAuthLogin({ token: tokenResponse.access_token });
-  
+        const res = await googleAuthLogin({
+          token: tokenResponse.access_token,
+        });
+
         console.log("📦 Full backend response:", res);
-  
+
         const token = res?.token;
         if (!token) {
           toast.error("Login failed: No token received");
           return;
         }
-  
+
         // Optional: Save user data too
         const user = res.user;
         console.log("👤 Logged in user:", user);
-  
+
         if (remember) localStorage.setItem("token", token);
         else sessionStorage.setItem("token", token);
-  
+
         toast.success("Google login successful");
         navigate("/dashboard");
       } catch (err: any) {
@@ -149,7 +156,6 @@ const LoginPage: React.FC = () => {
     },
     onError: () => toast.error("Google login failed"),
   });
-  
 
   return (
     <div className="min-h-screen flex bg-white text-gray-800 w-full py-4 px-2">
@@ -160,7 +166,7 @@ const LoginPage: React.FC = () => {
         {/* Logo */}
         <div className="flex items-center justify-center md:justify-start space-x-2 mb-8">
           <img src="/assets/logo1.jpg" alt="Logo" className="w-7 h-7 rounded" />
-          <h1 className="text-xl font-bold">Note</h1>
+          <h1 className="text-xl font-bold">Note Mate</h1>
         </div>
 
         {/* Form */}
@@ -255,10 +261,38 @@ const LoginPage: React.FC = () => {
 
             <button
               onClick={otpSent ? handleVerify : handleGetOtp}
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white rounded py-2 font-medium transition"
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white rounded py-2 font-medium transition flex items-center justify-center gap-2"
               disabled={loading}
             >
-              {loading ? "Sending OTP..." : otpSent ? "Sign In" : "Get OTP"}
+              {loading ? (
+                <>
+                  <svg
+                    className="animate-spin h-4 w-4 text-white"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                    ></circle>
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+                    ></path>
+                  </svg>
+                  Sending...
+                </>
+              ) : otpSent ? (
+                "Sign In"
+              ) : (
+                "Get OTP"
+              )}
             </button>
 
             {/* Divider */}
@@ -273,7 +307,11 @@ const LoginPage: React.FC = () => {
               onClick={() => googleLogin()}
               className="w-full flex items-center justify-center gap-3 border border-gray-300 py-2 rounded hover:bg-gray-100 transition"
             >
-              <img src="/assets/google-logo.svg" alt="Google" className="w-5 h-5" />
+              <img
+                src="/assets/google-logo.svg"
+                alt="Google"
+                className="w-5 h-5"
+              />
               <span className="text-sm text-gray-700 font-medium">
                 Continue with Google
               </span>

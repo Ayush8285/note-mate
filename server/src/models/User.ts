@@ -1,17 +1,34 @@
-import mongoose from "mongoose";
+// models/User.ts
+import mongoose, { Document, Schema } from "mongoose";
 
-const userSchema = new mongoose.Schema(
+export interface IUser extends Document {
+  name?: string;
+  dob?: Date;
+  email: string;
+  isVerified: boolean;
+  otp?: string;
+  otpExpiresAt?: Date;
+  avatar?: string;
+  provider: "local" | "google";
+}
+
+const userSchema = new Schema<IUser>(
   {
-    name: { type: String },
-    dob: { type: Date },
+    name: String,
+    dob: Date,
     email: { type: String, required: true, unique: true },
     isVerified: { type: Boolean, default: false },
-    otp: { type: String },
-    otpExpiresAt: { type: Date },
-    avatar: { type: String }, // ✅ for Google profile image
-    provider: { type: String, default: "local" }, // ✅ 'local' or 'google'
+    otp: String,
+    otpExpiresAt: Date,
+    avatar: String,
+    provider: {
+      type: String,
+      enum: ["local", "google"],
+      default: "local",
+    },
   },
   { timestamps: true }
 );
 
-export default mongoose.model("User", userSchema);
+const User = mongoose.model<IUser>("User", userSchema);
+export default User;

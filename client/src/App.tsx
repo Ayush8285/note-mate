@@ -1,45 +1,62 @@
-// src/App.tsx
-import { Routes, Route, Navigate } from 'react-router-dom';
-import SignupPage from './pages/SignupPage';
-import LoginPage from './pages/LoginPage';
-import Dashboard from './pages/Dashboard';
-import NotFound from './pages/NotFound';
+import React, { useEffect, useState } from "react";
+import { Routes, Route, Navigate, useLocation } from "react-router-dom";
+import SignupPage from "./pages/SignupPage";
+import LoginPage from "./pages/LoginPage";
+import Dashboard from "./pages/Dashboard";
+import NotFound from "./pages/NotFound";
+import Loader from "./components/Loader";  // your Loader component
 
-// 🔐 Auth checker
 const isAuthenticated = (): boolean => {
-  return !!(localStorage.getItem('token') || sessionStorage.getItem('token'));
+  return !!(localStorage.getItem("token") || sessionStorage.getItem("token"));
 };
 
-// 🔒 Protected route wrapper
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   return isAuthenticated() ? <>{children}</> : <Navigate to="/signup" replace />;
 };
 
 function App() {
+  const location = useLocation();
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    // Show loader on route change
+    setLoading(true);
+
+    // Hide loader after a short delay (simulate load)
+    const timer = setTimeout(() => setLoading(false), 400);
+
+    return () => clearTimeout(timer);
+  }, [location.pathname]);
+
   return (
-    <Routes>
-      {/* Default route: if authenticated, go to dashboard; otherwise, go to signup */}
-      <Route
-        path="/"
-        element={<Navigate to={isAuthenticated() ? "/dashboard" : "/signup"} replace />}
-      />
+    <>
+      {loading && <Loader />}
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <Navigate
+              to={isAuthenticated() ? "/dashboard" : "/signup"}
+              replace
+            />
+          }
+        />
 
-      <Route path="/signup" element={<SignupPage />} />
-      <Route path="/login" element={<LoginPage />} />
+        <Route path="/signup" element={<SignupPage />} />
+        <Route path="/login" element={<LoginPage />} />
 
-      {/* Protected Dashboard */}
-      <Route
-        path="/dashboard"
-        element={
-          <ProtectedRoute>
-            <Dashboard />
-          </ProtectedRoute>
-        }
-      />
+        <Route
+          path="/dashboard"
+          element={
+            <ProtectedRoute>
+              <Dashboard />
+            </ProtectedRoute>
+          }
+        />
 
-      {/* 404 fallback */}
-      <Route path="*" element={<NotFound />} />
-    </Routes>
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </>
   );
 }
 

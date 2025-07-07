@@ -1,8 +1,7 @@
-import axios from 'axios';
-import jwt from 'jsonwebtoken';
-import User from '../models/User';
-import { sendOtpEmail } from '../utils/sendOtp';
-
+import axios from "axios";
+import jwt from "jsonwebtoken";
+import User from "../models/User";
+import { sendOtpEmail } from "../utils/sendOtp";
 
 // ✅ Signup (Name, DOB, Email)
 export const sendSignupOtp = async (req: any, res: any) => {
@@ -12,7 +11,10 @@ export const sendSignupOtp = async (req: any, res: any) => {
   }
 
   const existingUser = await User.findOne({ email });
-  if (existingUser) return res.status(400).json({ error: "User already exists, please log in" });
+  if (existingUser)
+    return res
+      .status(400)
+      .json({ error: "User already exists, please log in" });
 
   const otp = Math.floor(100000 + Math.random() * 900000).toString();
 
@@ -36,7 +38,10 @@ export const sendLoginOtp = async (req: any, res: any) => {
   if (!email) return res.status(400).json({ error: "Email is required" });
 
   const user = await User.findOne({ email });
-  if (!user) return res.status(404).json({ error: "User not found. Please sign up first." });
+  if (!user)
+    return res
+      .status(404)
+      .json({ error: "User not found. Please sign up first." });
 
   const otp = Math.floor(100000 + Math.random() * 900000).toString();
 
@@ -48,7 +53,6 @@ export const sendLoginOtp = async (req: any, res: any) => {
 
   return res.json({ message: "OTP sent to email" });
 };
-
 
 export const verifyOtp = async (req: any, res: any) => {
   const { email, otp } = req.body;
@@ -68,7 +72,9 @@ export const verifyOtp = async (req: any, res: any) => {
   user.otpExpiresAt = undefined;
   await user.save();
 
-  const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET!, { expiresIn: '1h' });
+  const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET!, {
+    expiresIn: "1h",
+  });
 
   res.json({
     token,
@@ -76,7 +82,7 @@ export const verifyOtp = async (req: any, res: any) => {
       email: user.email,
       name: user.name,
       dob: user.dob,
-    }
+    },
   });
 };
 
@@ -96,34 +102,30 @@ export const resendOtp = async (req: any, res: any) => {
   return res.json({ message: "OTP resent successfully" });
 };
 
-
 export const googleLogin = async (req: any, res: any) => {
   const { token } = req.body;
 
-  console.log("🔐 Received token from frontend:", token); // STEP 1: Check token received
-
   if (!token) {
-    console.error("❌ Missing Google token in request body");
     return res.status(400).json({ error: "Missing Google token" });
   }
 
   try {
     // STEP 2: Fetch user info from Google
-    const googleRes = await axios.get(`https://www.googleapis.com/oauth2/v3/userinfo?access_token=${token}`);
-
-    console.log("✅ Google user info response:", googleRes.data); // STEP 3: Print user info
+    const googleRes = await axios.get(
+      `https://www.googleapis.com/oauth2/v3/userinfo?access_token=${token}`
+    );
 
     const { email, name, picture } = googleRes.data;
 
     if (!email) {
-      console.error("❌ Failed to get email from Google user info");
-      return res.status(400).json({ error: "Failed to fetch Google user info" });
+      return res
+        .status(400)
+        .json({ error: "Failed to fetch Google user info" });
     }
 
     // STEP 4: Find or create user
     let user = await User.findOne({ email });
     if (!user) {
-      console.log("🆕 Creating new user for:", email);
       user = new User({
         email,
         name,
@@ -132,18 +134,12 @@ export const googleLogin = async (req: any, res: any) => {
         provider: "google",
       });
       await user.save();
-    } else {
-      console.log("🔄 Existing user found:", email);
     }
 
     // STEP 5: Generate JWT
     const jwtToken = jwt.sign({ userId: user._id }, process.env.JWT_SECRET!, {
       expiresIn: "1h",
     });
-
-    console.log("🎫 JWT token generated:", jwtToken);
-    console.log("📤 Sending final response to frontend");
-
 
     res.json({
       token: jwtToken,
@@ -153,11 +149,7 @@ export const googleLogin = async (req: any, res: any) => {
         avatar: user.avatar,
       },
     });
-    
   } catch (err: any) {
-    console.error("❌ Google Login Error:", err.message);
     res.status(500).json({ error: "Google login failed" });
   }
 };
-
-
