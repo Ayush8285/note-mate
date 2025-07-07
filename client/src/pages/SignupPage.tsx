@@ -227,6 +227,11 @@ const SignupPage: React.FC = () => {
                   onFocus={() => setIsDateFocused(true)}
                   onBlur={() => setIsDateFocused(false)}
                   dateFormat="dd MMMM yyyy"
+                  showYearDropdown
+                  showMonthDropdown
+                  dropdownMode="select"
+                  minDate={new Date("1950-01-01")}
+                  maxDate={new Date()}
                   placeholderText="Date of Birth"
                   customInput={<DateInput />}
                 />
