@@ -13,3 +13,7 @@ export const resendOtp = (data: { email: string }) =>
 
 export const verifyOtp = (data: { email: string; otp: string }) =>
   axios.post(`${API}/verify-otp`, data).then((res) => res.data);
+
+// ✅ NEW: Google Login
+export const googleAuthLogin = (data: { token: string }) =>
+  axios.post(`${API}/google-login`, data).then((res) => res.data);

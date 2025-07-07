@@ -2,9 +2,10 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import { motion, AnimatePresence } from "framer-motion";
-import { sendLoginOtp, verifyOtp, resendOtp } from "../api/auth";
+import { sendLoginOtp, verifyOtp, resendOtp, googleAuthLogin  } from "../api/auth";
 import { Eye, EyeOff } from "lucide-react";
 import "react-toastify/dist/ReactToastify.css";
+import { useGoogleLogin } from "@react-oauth/google";
 
 const FloatingLabelInput = ({
   label,
@@ -71,9 +72,8 @@ const LoginPage: React.FC = () => {
   const [otpVisible, setOtpVisible] = useState(false);
   const [otpSent, setOtpSent] = useState(false);
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
   const [resendLoading, setResendLoading] = useState(false);
-
+  const navigate = useNavigate();
 
   const handleGetOtp = async () => {
     if (!formData.email.trim()) {
@@ -119,21 +119,51 @@ const LoginPage: React.FC = () => {
       setResendLoading(false);
     }
   };
+
+  const googleLogin = useGoogleLogin({
+    onSuccess: async (tokenResponse) => {
+      try {
+        const res = await googleAuthLogin({ token: tokenResponse.access_token });
+  
+        console.log("📦 Full backend response:", res);
+  
+        const token = res?.token;
+        if (!token) {
+          toast.error("Login failed: No token received");
+          return;
+        }
+  
+        // Optional: Save user data too
+        const user = res.user;
+        console.log("👤 Logged in user:", user);
+  
+        if (remember) localStorage.setItem("token", token);
+        else sessionStorage.setItem("token", token);
+  
+        toast.success("Google login successful");
+        navigate("/dashboard");
+      } catch (err: any) {
+        console.error("❌ Error during backend Google login:", err);
+        toast.error(err.response?.data?.error || "Google login failed");
+      }
+    },
+    onError: () => toast.error("Google login failed"),
+  });
   
 
   return (
     <div className="min-h-screen flex bg-white text-gray-800 w-full py-4 px-2">
       <ToastContainer position="top-right" autoClose={3000} />
 
-      {/* Left Panel - 30% */}
+      {/* Left Panel */}
       <div className="w-full md:w-[40%] flex flex-col px-6 md:px-20 py-8 items-center md:items-start text-center md:text-left">
-        {/* Logo Top Left */}
+        {/* Logo */}
         <div className="flex items-center justify-center md:justify-start space-x-2 mb-8">
           <img src="/assets/logo1.jpg" alt="Logo" className="w-7 h-7 rounded" />
           <h1 className="text-xl font-bold">Note</h1>
         </div>
 
-        {/* Form Center */}
+        {/* Form */}
         <div className="flex-1 flex flex-col justify-center w-full">
           <div className="w-full md:max-w-[380px] mx-auto md:mx-0">
             <h2 className="text-3xl font-semibold mb-2">Sign In</h2>
@@ -180,35 +210,35 @@ const LoginPage: React.FC = () => {
                     }
                   />
                   <div className="flex items-center justify-between text-sm mb-2">
-                  <button
-  onClick={handleResend}
-  disabled={resendLoading}
-  className="text-blue-600 hover:underline flex items-center gap-2"
->
-  {resendLoading && (
-    <svg
-      className="animate-spin h-4 w-4 text-blue-600"
-      xmlns="http://www.w3.org/2000/svg"
-      fill="none"
-      viewBox="0 0 24 24"
-    >
-      <circle
-        className="opacity-25"
-        cx="12"
-        cy="12"
-        r="10"
-        stroke="currentColor"
-        strokeWidth="4"
-      ></circle>
-      <path
-        className="opacity-75"
-        fill="currentColor"
-        d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
-      ></path>
-    </svg>
-  )}
-  {resendLoading ? "Sending..." : "Resend OTP"}
-</button>
+                    <button
+                      onClick={handleResend}
+                      disabled={resendLoading}
+                      className="text-blue-600 hover:underline flex items-center gap-2"
+                    >
+                      {resendLoading && (
+                        <svg
+                          className="animate-spin h-4 w-4 text-blue-600"
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                        >
+                          <circle
+                            className="opacity-25"
+                            cx="12"
+                            cy="12"
+                            r="10"
+                            stroke="currentColor"
+                            strokeWidth="4"
+                          ></circle>
+                          <path
+                            className="opacity-75"
+                            fill="currentColor"
+                            d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+                          ></path>
+                        </svg>
+                      )}
+                      {resendLoading ? "Sending..." : "Resend OTP"}
+                    </button>
 
                     <label className="flex items-center gap-2 text-gray-600">
                       <input
@@ -231,6 +261,24 @@ const LoginPage: React.FC = () => {
               {loading ? "Sending OTP..." : otpSent ? "Sign In" : "Get OTP"}
             </button>
 
+            {/* Divider */}
+            <div className="flex items-center my-5">
+              <hr className="flex-grow border-gray-300" />
+              <span className="px-4 text-gray-500 text-sm">or</span>
+              <hr className="flex-grow border-gray-300" />
+            </div>
+
+            {/* Google Login Button */}
+            <button
+              onClick={() => googleLogin()}
+              className="w-full flex items-center justify-center gap-3 border border-gray-300 py-2 rounded hover:bg-gray-100 transition"
+            >
+              <img src="/assets/google-logo.svg" alt="Google" className="w-5 h-5" />
+              <span className="text-sm text-gray-700 font-medium">
+                Continue with Google
+              </span>
+            </button>
+
             <p className="text-sm mt-4 text-center">
               Need an account?{" "}
               <a href="/signup" className="text-blue-600 underline font-medium">
@@ -239,16 +287,16 @@ const LoginPage: React.FC = () => {
             </p>
           </div>
         </div>
-        </div>
-        {/* Right Panel - 70% */}
-        <div className="hidden md:flex w-[60%] items-center justify-center bg-white">
-          <img
-            src="/assets/signin.jpeg"
-            alt="Sign In Visual"
-            className="max-w-full h-auto object-contain rounded-lg shadow-lg "
-          />
-        </div>
-      
+      </div>
+
+      {/* Right Panel */}
+      <div className="hidden md:flex w-[60%] items-center justify-center bg-white">
+        <img
+          src="/assets/signin.jpeg"
+          alt="Sign In Visual"
+          className="max-w-full h-auto object-contain rounded-lg shadow-lg"
+        />
+      </div>
     </div>
   );
 };
