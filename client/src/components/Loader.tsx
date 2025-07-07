@@ -1,6 +1,4 @@
 // components/Loader.tsx
-import React from "react";
-
 const Loader = () => {
   return (
     <div className="fixed inset-0 flex items-center justify-center z-50 bg-gradient-to-br from-blue-900 via-blue-700 to-blue-500 bg-opacity-90">

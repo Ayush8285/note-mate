@@ -24,7 +24,6 @@ const Dashboard: React.FC = () => {
   const [newTitle, setNewTitle] = useState("");
   const [newContent, setNewContent] = useState("");
 
-  const [editingNoteId, setEditingNoteId] = useState<string | null>(null);
   const [editedContent, setEditedContent] = useState("");
   const [expandedNote, setExpandedNote] = useState<Note | null>(null);
 
@@ -52,7 +51,6 @@ const Dashboard: React.FC = () => {
     if (!newContent.trim()) return;
     try {
       const newNote = await createNote({
-        title: newTitle.trim() || undefined,
         content: newContent.trim(),
       });
       setNotes((prev) => [...prev, newNote]);
@@ -204,6 +202,8 @@ const Dashboard: React.FC = () => {
             <button
               className="absolute top-2 right-2 text-gray-500 hover:text-red-500"
               onClick={() => setExpandedNote(null)}
+              title="Close"
+              aria-label="Close"
             >
               <X size={20} />
             </button>
@@ -216,6 +216,8 @@ const Dashboard: React.FC = () => {
               rows={6}
               value={editedContent}
               onChange={(e) => setEditedContent(e.target.value)}
+              placeholder="Edit your note..."
+              title="Edit note content"
             />
             <div className="flex justify-end gap-3 mt-4">
               <button

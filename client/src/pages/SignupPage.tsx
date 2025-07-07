@@ -91,7 +91,7 @@ const SignupPage: React.FC = () => {
   const [isDateFocused, setIsDateFocused] = useState(false);
   const [otpSent, setOtpSent] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [remember, setRemember] = useState(true); // or false, as default
+  const [remember] = useState(true); // or false, as default
 
   const validateForm = () => {
     if (!formData.name.trim()) return toast.error("Name is required");
