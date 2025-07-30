@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -319,9 +319,9 @@ const LoginPage: React.FC = () => {
 
             <p className="text-sm mt-4 text-center">
               Need an account?{" "}
-              <a href="/signup" className="text-blue-600 underline font-medium">
+              <Link to="/signup" className="text-blue-600 underline font-medium">
                 Create one
-              </a>
+              </Link>
             </p>
           </div>
         </div>

@@ -1,5 +1,5 @@
 import React, { useState, forwardRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Calendar } from "lucide-react";
 import { format } from "date-fns";
 import DatePicker from "react-datepicker";
@@ -310,9 +310,9 @@ const SignupPage: React.FC = () => {
 
             <p className="text-sm text-center mt-2">
               Already have an account?{" "}
-              <a href="/login" className="text-blue-600 underline font-medium">
+              <Link to="/login" className="text-blue-600 underline font-medium">
                 Sign in
-              </a>
+              </Link>
             </p>
           </div>
         </div>
