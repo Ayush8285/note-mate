@@ -3,6 +3,7 @@ import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import noteImage from "/assets/images.jpg";
 import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
 
 const Home: React.FC = () => {
   return (
@@ -96,12 +97,12 @@ const Home: React.FC = () => {
         <p className="text-gray-700 mb-8 text-lg">
           Join thousands of users and bring your ideas to life with NoteMate.
         </p>
-        <a
-          href="/signup"
+        <Link
+          to="/signup"
           className="inline-block px-8 py-3 bg-blue-600 text-white rounded-full text-lg hover:bg-blue-700 transition"
         >
           Get Started for Free
-        </a>
+        </Link>
       </section>
 
       <Footer />
