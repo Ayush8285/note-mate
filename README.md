@@ -19,7 +19,6 @@ A full-stack note-taking app with OTP & Google auth, built using React + Node.js
 ## 🚀 Live URL
 
 - Frontend: [Vercel URL](https://note-app-kohl-one.vercel.app)
-- Backend: [API URL](https://note-app-cwv5.onrender.com)
 
 ## 📦 Setup Instructions
 
