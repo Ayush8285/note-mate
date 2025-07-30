@@ -4,14 +4,15 @@ import SignupPage from "./pages/SignupPage";
 import LoginPage from "./pages/LoginPage";
 import Dashboard from "./pages/Dashboard";
 import NotFound from "./pages/NotFound";
-import Loader from "./components/Loader";  // your Loader component
+import Loader from "./components/Loader";
+import Home from "./pages/Home";
 
 const isAuthenticated = (): boolean => {
   return !!(localStorage.getItem("token") || sessionStorage.getItem("token"));
 };
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
-  return isAuthenticated() ? <>{children}</> : <Navigate to="/signup" replace />;
+  return isAuthenticated() ? <>{children}</> : <Navigate to="/login" replace />;
 };
 
 function App() {
@@ -19,32 +20,23 @@ function App() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    // Show loader on route change
     setLoading(true);
-
-    // Hide loader after a short delay (simulate load)
     const timer = setTimeout(() => setLoading(false), 400);
-
     return () => clearTimeout(timer);
   }, [location.pathname]);
 
   return (
     <>
       {loading && <Loader />}
+
       <Routes>
-        <Route
-          path="/"
-          element={
-            <Navigate
-              to={isAuthenticated() ? "/dashboard" : "/signup"}
-              replace
-            />
-          }
-        />
+        {/* ✅ Show Home by default */}
+        <Route path="/" element={<Home />} />
 
         <Route path="/signup" element={<SignupPage />} />
         <Route path="/login" element={<LoginPage />} />
 
+        {/* ✅ Dashboard route protected */}
         <Route
           path="/dashboard"
           element={
@@ -54,6 +46,7 @@ function App() {
           }
         />
 
+        {/* ✅ Handle unknown paths */}
         <Route path="*" element={<NotFound />} />
       </Routes>
     </>

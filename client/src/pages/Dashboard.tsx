@@ -31,7 +31,7 @@ const Dashboard: React.FC = () => {
     const token =
       localStorage.getItem("token") || sessionStorage.getItem("token");
     if (!token) {
-      navigate("/login");
+      navigate("/");
       return;
     }
     const fetchData = async () => {
@@ -90,7 +90,7 @@ const Dashboard: React.FC = () => {
   const handleLogout = () => {
     localStorage.removeItem("token");
     sessionStorage.removeItem("token");
-    navigate("/login");
+    navigate("/");
   };
 
   return (

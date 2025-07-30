@@ -258,7 +258,7 @@ const SignupPage: React.FC = () => {
             <button
               onClick={otpSent ? handleVerify : handleGetOtp}
               disabled={loading}
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white rounded py-2 font-medium transition flex items-center justify-center gap-2"
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white rounded py-2 font-medium transition flex items-center justify-center gap-2 cursor-pointer"
             >
               {loading ? (
                 <svg
@@ -296,7 +296,7 @@ const SignupPage: React.FC = () => {
 
             <button
               onClick={() => googleLogin()}
-              className="w-full flex items-center justify-center gap-3 border border-gray-300 py-2 rounded hover:bg-gray-100 transition"
+              className="w-full flex items-center justify-center gap-3 border border-gray-300 py-2 rounded hover:bg-gray-100 transition cursor-pointer"
             >
               <img
                 src="/assets/google-logo.svg"

@@ -261,7 +261,7 @@ const LoginPage: React.FC = () => {
 
             <button
               onClick={otpSent ? handleVerify : handleGetOtp}
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white rounded py-2 font-medium transition flex items-center justify-center gap-2"
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white rounded py-2 font-medium transition flex items-center justify-center gap-2 cursor-pointer"
               disabled={loading}
             >
               {loading ? (
@@ -305,7 +305,7 @@ const LoginPage: React.FC = () => {
             {/* Google Login Button */}
             <button
               onClick={() => googleLogin()}
-              className="w-full flex items-center justify-center gap-3 border border-gray-300 py-2 rounded hover:bg-gray-100 transition"
+              className="w-full flex items-center justify-center gap-3 border border-gray-300 py-2 rounded hover:bg-gray-100 transition cursor-pointer"
             >
               <img
                 src="/assets/google-logo.svg"
