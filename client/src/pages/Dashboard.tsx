@@ -52,6 +52,7 @@ const Dashboard: React.FC = () => {
     try {
       const newNote = await createNote({
         content: newContent.trim(),
+        title: newTitle.trim()
       });
       setNotes((prev) => [...prev, newNote]);
       setNewTitle("");
@@ -153,7 +154,7 @@ const Dashboard: React.FC = () => {
             />
             <div className="flex justify-end gap-4 mt-3">
               <button
-                className="px-4 py-2 bg-gray-400 text-white rounded hover:bg-gray-500"
+                className="px-4 py-2 bg-gray-400 text-white rounded hover:bg-gray-500 cursor-pointer"
                 onClick={() => {
                   setShowCreateForm(false);
                   setNewTitle("");
@@ -163,7 +164,7 @@ const Dashboard: React.FC = () => {
                 Cancel
               </button>
               <button
-                className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 cursor-pointer"
                 onClick={handleAddNote}
               >
                 Add Note
@@ -184,12 +185,14 @@ const Dashboard: React.FC = () => {
             }}
             className="bg-white p-4 rounded shadow-lg border border-gray-300 cursor-pointer hover:shadow-xl transition-shadow duration-300"
           >
+            
             <h3 className="font-semibold text-gray-800 mb-2">
               {note.title || `Note ${index + 1}`}
             </h3>
           </div>
         ))}
       </div>
+     
 
       {/* Modal Overlay for Expanded Note */}
       {expandedNote && (
@@ -222,13 +225,13 @@ const Dashboard: React.FC = () => {
             <div className="flex justify-end gap-3 mt-4">
               <button
                 onClick={() => handleDeleteNote(expandedNote._id)}
-                className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
+                className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 cursor-pointer"
               >
                 <Trash2 className="inline-block mr-1" size={18} /> Delete
               </button>
               <button
                 onClick={handleUpdateNote}
-                className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
+                className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 cursor-pointer"
               >
                 Save
               </button>

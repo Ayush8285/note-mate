@@ -10,7 +10,7 @@ const getAuthHeader = () => {
 export const fetchNotes = () =>
   axios.get(NOTE_API, { headers: getAuthHeader() }).then((res) => res.data);
 
-export const createNote = (data: { content: string }) =>
+export const createNote = (data: { content: string, title: string }) =>
   axios.post(NOTE_API, data, { headers: getAuthHeader() }).then((res) => res.data);
 
 export const updateNote = (id: string, data: { content: string }) =>

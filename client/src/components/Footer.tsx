@@ -13,7 +13,7 @@ const Footer: React.FC = () => {
 
         {/* Navigation Links */}
         <div className="flex space-x-6 text-sm">
-          <Link to="/" className="hover:underline transition">Home</Link>
+          <Link to="/" onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })} className="hover:underline transition">Home</Link>
           <Link to="/login" className="hover:underline transition">Login</Link>
           <Link to="/signup" className="hover:underline transition">Signup</Link>
           <a
